@@ -2,14 +2,20 @@ import { usePlayersNames } from "@/hooks/usePlayerNames";
 import { Grid2 as Grid, Typography } from "@mui/material";
 import { gameAtom, gameEvalAtom } from "../../../states";
 import { MoveClassification } from "@/types/enums";
+import { calculateAverageCentipawnLoss, calculateEstimatedRating } from "@/types/eval";
 import ClassificationRow from "./classificationRow";
 import { useAtomValue } from "jotai";
+
 
 export default function MovesClassificationsRecap() {
   const { whiteName, blackName } = usePlayersNames(gameAtom);
   const gameEval = useAtomValue(gameEvalAtom);
 
   if (!gameEval?.positions.length) return null;
+
+  const averageCentipawnLoss = calculateAverageCentipawnLoss(gameEval);
+  const whiteRating = calculateEstimatedRating(averageCentipawnLoss);
+  const blackRating = calculateEstimatedRating(averageCentipawnLoss);
 
   return (
     <Grid
@@ -28,14 +34,14 @@ export default function MovesClassificationsRecap() {
         wrap="nowrap"
         size={12}
       >
-        <Typography width="12rem" align="center" noWrap fontSize="0.9rem">
-          {whiteName}
+        <Typography width="10rem" align="center" noWrap fontSize="0.9rem">
+          {whiteName} (~{whiteRating})
         </Typography>
 
         <Typography width="7rem" />
 
-        <Typography width="12rem" align="center" noWrap fontSize="0.9rem">
-          {blackName}
+        <Typography width="10rem" align="center" noWrap fontSize="0.9rem">
+          {blackName} (~{blackRating})
         </Typography>
       </Grid>
 
@@ -58,5 +64,5 @@ export const sortedMoveClassfications = [
   MoveClassification.Book,
   MoveClassification.Inaccuracy,
   MoveClassification.Mistake,
-  MoveClassification.Blunder,
+  MoveClassification.Blunder
 ];

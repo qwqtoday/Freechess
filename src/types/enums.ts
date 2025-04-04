@@ -24,6 +24,7 @@ export enum MoveClassification {
   Book = "book",
   Great = "great",
   Brilliant = "brilliant",
+  EstRating = "est_rating",
 }
 
 export enum Color {
